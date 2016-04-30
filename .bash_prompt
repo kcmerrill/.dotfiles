@@ -1,0 +1,94 @@
+# include our git prompt
+
+prompt_git() {
+	local s='';
+	local branchName='';
+
+	# Check if the current directory is in a Git repository.
+	if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
+
+		# check if the current directory is in .git before running git checks
+		if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+
+			# Ensure the index is up to date.
+			git update-index --really-refresh -q &>/dev/null;
+
+			# Check for uncommitted changes in the index.
+			if ! $(git diff --quiet --ignore-submodules --cached); then
+				s+='+';
+			fi;
+
+			# Check for unstaged changes.
+			if ! $(git diff-files --quiet --ignore-submodules --); then
+				s+='!';
+			fi;
+
+			# Check for untracked files.
+			if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+				s+='?';
+			fi;
+
+			# Check for stashed files.
+			if $(git rev-parse --verify refs/stash &>/dev/null); then
+				s+='$';
+			fi;
+
+		fi;
+
+		# Get the short symbolic ref.
+		# If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
+		# Otherwise, just give up.
+		branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+			git rev-parse --short HEAD 2> /dev/null || \
+			echo '(unknown)')";
+
+		[ -n "${s}" ] && s=" [${s}]";
+        echo -e "${branchName}${s}";
+	else
+		return;
+	fi;
+}
+
+# define our colors
+bold='\033[1m';
+reset="\033[0m";
+blue="\033[34m";
+green="\033[32m";
+purple="\033[35m";
+red="\033[31m";
+violet="\033[1;35m";
+white="\033[37m";
+yellow="\033[33m";
+dark="\033[30m"
+
+# default host
+host="{blue}\h "
+
+# are we in old dev?
+if [[ "${HOSTNAME}" == *".dev."* ]]; then
+        host="\h.dev";
+fi;
+# are we on an aws box?
+if [[ "${HOSTNAME}" == *"ip-"* ]]; then
+    #Hostname is all jacked in AWS
+    host="${blue}aws.dev"
+fi;
+# work?
+if [[ "${HOSTNAME}" == "rpco-"* ]]; then
+    #workbox
+    host="${blue}rp-local"
+fi;
+
+#user goodies
+user="${green}\u"
+# are we root? if so ... lets point it out
+if [[ "${USER}" == "root" ]]; then
+    user="${red}\u";
+fi;
+
+# what directory are you in?
+directory="${white}in ${violet}\W"
+
+PS1="\n${user}${dark} @ ${host} ${directory}${yellow} \$(prompt_git)\n${dark}[ \d \T ] \n${white}\$ ${reset}"
+
+PS2="\[${blue}\]→ \[${reset}\]";

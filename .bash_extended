@@ -1,0 +1,11 @@
+export CLICOLOR=1
+
+alias g='go install && ${PWD##*/}'
+
+source ~/.dotfiles/.bash_prompt
+
+# Start tmux
+if [[ -t 1 && -z ${TMUX} ]]; then
+       tmux attach > /dev/null || tmux new -s "TMUX"
+fi
+
