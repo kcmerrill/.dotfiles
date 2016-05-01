@@ -25,3 +25,4 @@ vim +PluginInstall +qall
 ~/.vim/bundle/powerline-fonts/install.sh
 
 source ~/.bashrc
+source ~/.bash_profile
