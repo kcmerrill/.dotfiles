@@ -36,7 +36,6 @@ set foldmethod=indent   "fold based on indent
 set foldnestmax=3       "deepest fold is 3 levels
 set nofoldenable        "dont fold by default
 
-
 "display tabs and trailing spaces
 "set list
 "set listchars=tab:â–·â‹…,trail:â‹…,nbsp:â‹…
@@ -102,6 +101,7 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'bogado/file-line'
 Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
+Plugin 'vim-airline/vim-airline-themes'
 call vundle#end()
 
 filetype plugin indent on       " Required, don't ask questions!
@@ -143,10 +143,11 @@ let g:ctrlp_working_path_mode = 'r'
 " Tmux(Status Bar)
 " AirLine(Status Bar)
 set laststatus=2
-let g:airline_theme='powerlineish'
 set ttimeoutlen=50
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tmuxline#enabled = 1
+let g:airline_theme='powerlineish'
+set linespace=1
 
 " Remove arrows in airline
 let g:airline_powerline_fonts = 0
