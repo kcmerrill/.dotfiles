@@ -1,7 +1,12 @@
 export CLICOLOR=1
 
+export GOPATH=/code/go
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:/usr/local/go/bin
+
 alias g='go install && ${PWD##*/}'
 
+source ~/.dotfiles/.git-prompt.sh
 source ~/.dotfiles/.bash_prompt
 
 # Start tmux
